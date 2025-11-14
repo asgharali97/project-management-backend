@@ -1,0 +1,75 @@
+# Node.js dependencies
+/node_modules
+
+# Logs
+/logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# OS X files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+_thumbs
+
+# file tracking
+*.sublime-project
+*.sublime-workspace
+
+# temporary files
+*.tmp
+*.temp
+*.swp
+*._swp
+*.swo
+*.swn
+*.swx
+*.log
+.npmlog
+.yarn-integrity
+.yarn-debug.log*
+
+# IDE files
+*.iml
+.idea
+.vscode
+*.code_workspace
+*.metadata
+*.plugins
+*.toolstargets
+*.visualstudio
+
+# test files
+*.spec.js
+*.test.js
+*.mock.js
+*.fixture.js
+*.fixture.ts
+*.d.ts.map
+
+# build files
+build
+dist
+public/build
+
+# misc
+.env
+.env.example
+.env.local
+.env.prod
+.env.test
+.env.development
