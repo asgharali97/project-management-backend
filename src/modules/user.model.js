@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt'
-import { jwt } from "jsonwebtoken";
-import { crypto } from 'crypto'
+import jwt from "jsonwebtoken";
+import crypto from 'crypto'
 const userSchema = mongoose.Schema(
     {
         avatar: {
@@ -55,13 +55,17 @@ const userSchema = mongoose.Schema(
         emailVerifactionExpiry: {
             type: Date
         }
-    },{ timestamps: true }
+    }, { timestamps: true }
 )
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified("password")) return next()
-    this.password = bcrypt.hash(this.password, 12)
-    next()
+    try {
+        this.password = await bcrypt.hash(this.password, 12)
+        next()
+    } catch (error) {
+        next(error)
+    }
 })
 
 userSchema.methods.isPasswordCorrect = async function (password) {
@@ -69,14 +73,14 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 }
 
 userSchema.methods.genrateAccessToken = async function () {
-    return await jwt.sing({
+    return await jwt.sign({
         _id: this._id,
         username: this.username
     }, process.env.ACCESS_TOKEN_SECERET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
 }
 
 userSchema.methods.genrateRefreshToken = async function () {
-    return await jwt.sing({
+    return await jwt.sign({
         _id: this._id,
         username: this.username
     }, process.env.REFRESH_TOKEN_SECERET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
@@ -85,7 +89,7 @@ userSchema.methods.genrateRefreshToken = async function () {
 userSchema.methods.genrateTemporaryToken = async function () {
     const unHashedToken = crypto.randomBytes(10).toString("hex")
     const hashedToken = crypto
-        .createHmac('sha256')
+        .createHmac('sha256', process.env.TOKEN_SECRET)
         .update(unHashedToken)
         .digest('hex')
     const tokenExpiry = Date.now() + 20 * 60 * 1000
